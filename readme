@@ -1,0 +1,14 @@
+vrf_net_compare
+
+goal is to read in from api the previous group
+then read in collection of vrf's 
+
+run though and find gaps
+
+
+phase 1 is read in info as csv
+
+future will have something like
+
+start,orig_group_name
+end,vrf1,vrf2,vrf3,.....
