@@ -9,6 +9,7 @@ import requests
 import argparse
 import ipaddress
 import apifunctions
+from netzone import Netzone
 
 #remove the InsecureRequestWarning messages
 import urllib3
@@ -138,12 +139,7 @@ def main():
 
     prelist = build_ip_list_file(file1)
     vrflist = build_ip_list_file(file2)
-    """
-    if(debug == 1):
-        print(len(prelist))
-        print(len(vrflist))
-    """
-
+    
     egrp1 = list()
     egrp2 = list()
 
@@ -161,6 +157,29 @@ def main():
 
     compare_net(egrp1, egrp2, "Pre", "VRF")
     compare_net(egrp2, egrp1, "VRF", "Pre")
+    
+    """
+    need to figure out what we're doing here
+    """
+    n1 = Netzone()
+    n2 = Netzone()
+    nz = 1
+    with open('compare.csv') as csvreader:
+        reader = csv.reader(csvreader, delimiter=',', quotechar='|')
+
+        for row in reader:
+            dataset = row[0]
+            if(nz == 1):
+                n1.set_name(dataset)
+            if(nz == 2):
+                n2.set_name(dataset)
+
+            for i in range(len(row)):
+                print(row[i])
+            ##print(len(row))
+            nz += 1
+            print("*^*^*^*^")
+
 
     ###
     print("Logging out Zzzzzzzz")
