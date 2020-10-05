@@ -23,6 +23,9 @@ read in exiting group / list of networks
 compare with output of vrf collections
 """
 
+"""
+read in file info.  defunct now, can be used in emergency with csv files.
+"""
 def build_ip_list_file(filename):
     print("in build_ip_list")
     debug = 0
@@ -60,6 +63,9 @@ def build_ip_list_file(filename):
     return(netlist)
 #endof build_ip_list()
 
+"""
+compare lists and give diff
+"""
 def compare_net(list1, list2, meta_string1, meta_string2):
     print("in function compare_net")
 
@@ -82,6 +88,9 @@ def compare_net(list1, list2, meta_string1, meta_string2):
             print(list1[x] + " found on " + meta_string1 + " but not on " + meta_string2)
 #end_of_compare_net
 
+"""
+don't need function but it gave birth to a new one.
+"""
 #can we pass netlist by ref ??
 def extract_group_to_list(name, netlist, mds_ip, sid):
     print("in extract group to list")
@@ -116,7 +125,7 @@ def extract_group_to_list(name, netlist, mds_ip, sid):
 
 def extract_group_data_to_obj_list(name, Netzone, mds_ip, sid):
     print("in extract group data for netzone")
-    debug = 1
+    debug = 0
 
     get_grp_json = {'name' : name}
 
@@ -156,8 +165,8 @@ def main():
     ## VRF1-OLIV-389
     ## TMP-OLIV
 
-    ip_addr = "146.18.96.16"
-    ip_cma  = "146.18.96.25"
+    ip_addr = "204.135.121.150"
+    ip_cma  = "204.135.121.158"
     user    = "roapi"
     passwd  = "1qazxsw2"
 
@@ -166,29 +175,30 @@ def main():
     if(debug == 1):
         print("session id : " + sid)
 
-    file1 = "/home/gdunlap/Code/python/vrf_net_compare/ind1.csv"
-    file2 = "/home/gdunlap/Code/python/vrf_net_compare/ind2.csv"
+    ## pre lim versions of compare
+    #file1 = "/home/gdunlap/Code/python/vrf_net_compare/ind1.csv"
+    #file2 = "/home/gdunlap/Code/python/vrf_net_compare/ind2.csv"
 
-    prelist = build_ip_list_file(file1)
-    vrflist = build_ip_list_file(file2)
+    #prelist = build_ip_list_file(file1)
+    #vrflist = build_ip_list_file(file2)
     
-    egrp1 = list()
-    egrp2 = list()
+    #egrp1 = list()
+    #egrp2 = list()
 
-    compare_net(prelist, vrflist, "Pre", "VRF")
-    compare_net(vrflist, prelist, "VRF", "Pre")
+    #compare_net(prelist, vrflist, "Pre", "VRF")
+    #compare_net(vrflist, prelist, "VRF", "Pre")
 
-    extract_group_to_list("TMP-OLIV", egrp1, ip_addr, sid)
+    #extract_group_to_list("TMP-OLIV", egrp1, ip_addr, sid)
 
-    print(len(egrp1))
-    extract_group_to_list("VRF1-OLIV-389", egrp2, ip_addr, sid)
+    #print(len(egrp1))
+    #extract_group_to_list("VRF1-OLIV-389", egrp2, ip_addr, sid)
 
-    print(len(egrp2))
+    #print(len(egrp2))
 
-    print("-------------------------------------------------")
+    #print("-------------------------------------------------")
 
-    compare_net(egrp1, egrp2, "Pre", "VRF")
-    compare_net(egrp2, egrp1, "VRF", "Pre")
+    #compare_net(egrp1, egrp2, "Pre", "VRF")
+    #compare_net(egrp2, egrp1, "VRF", "Pre")
     
     """
     need to figure out what we're doing here
