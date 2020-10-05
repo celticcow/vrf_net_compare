@@ -17,6 +17,11 @@ class Netzone(object):
     def get_network_count():
         return(len(self.networks))
 
+    def get_nets(self):
+        return(self.networks)
+
+    def get_name(self):
+        return(self.name)
 
     #modifiers
     def set_name(self, name):

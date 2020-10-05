@@ -114,6 +114,38 @@ def extract_group_to_list(name, netlist, mds_ip, sid):
             netlist.append(net_2_add)
 #end_of_extract_group_to_list
 
+def extract_group_data_to_obj_list(name, Netzone, mds_ip, sid):
+    print("in extract group data for netzone")
+    debug = 1
+
+    get_grp_json = {'name' : name}
+
+    get_grp_result = apifunctions.api_call(mds_ip, "show-group", get_grp_json, sid)
+
+    if(debug == 1):
+        print(json.dumps(get_grp_result))
+
+    if(debug == 1):
+        print(len(get_grp_result['members']))
+
+    for x in range(len(get_grp_result['members'])):
+        if(debug == 1):
+            print(get_grp_result['members'][x]['type'])
+
+        if(get_grp_result['members'][x]['type'] == "network"):
+            net_2_add = get_grp_result['members'][x]['subnet4'] + "/" + str(get_grp_result['members'][x]['mask-length4'])
+            if(debug == 1):
+                print(get_grp_result['members'][x]['subnet4'])
+                print(get_grp_result['members'][x]['mask-length4'])
+            
+            Netzone.add_network(net_2_add)
+            #netlist.append(net_2_add)
+        elif(get_grp_result['members'][x]['type'] == "host"):
+            net_2_add = get_grp_result['members'][x]['ipv4-address'] + "/32"
+
+            #netlist.append(net_2_add)
+            Netzone.add_network(net_2_add)
+#end_of_extract_group_data_to_obj_list
 
 
 def main():
@@ -161,25 +193,40 @@ def main():
     """
     need to figure out what we're doing here
     """
+    nzone_list = list()
     n1 = Netzone()
     n2 = Netzone()
-    nz = 1
+
+    nzone_list.append(n1)
+    nzone_list.append(n2)
+
+    nz = 0
     with open('compare.csv') as csvreader:
         reader = csv.reader(csvreader, delimiter=',', quotechar='|')
 
         for row in reader:
             dataset = row[0]
-            if(nz == 1):
-                n1.set_name(dataset)
-            if(nz == 2):
-                n2.set_name(dataset)
+
+            nzone_list[nz].set_name(dataset)
+            #if(nz == 0):
+            #    n1.set_name(dataset)
+            #if(nz == 1):
+            #    n2.set_name(dataset)
 
             for i in range(len(row)):
-                print(row[i])
+                if(i == 0):
+                    pass
+                else:
+                    print("@@@ " + row[i])
+                    extract_group_data_to_obj_list(row[i], nzone_list[nz], ip_addr, sid)
+                    ###extract_group_to_list(row[i], nzone_list[nz].get_nets(), ip_addr, sid)
             ##print(len(row))
             nz += 1
             print("*^*^*^*^")
 
+    ###
+    compare_net(nzone_list[0].get_nets(), nzone_list[1].get_nets(), nzone_list[0].get_name(), nzone_list[1].get_name())
+    compare_net(nzone_list[1].get_nets(), nzone_list[0].get_nets(), nzone_list[1].get_name(), nzone_list[0].get_name())
 
     ###
     print("Logging out Zzzzzzzz")
